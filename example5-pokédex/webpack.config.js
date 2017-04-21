@@ -21,6 +21,13 @@ const plugins = [
 
 const rules = [
     {
+        test: /\.css$/,
+        use: [
+            {loader:'style-loader'},
+            {loader:'css-loader'}
+        ]
+    },
+    {
         test: /\.jsx?$/,
         enforce: 'pre',
         exclude: /(node_modules)/,
