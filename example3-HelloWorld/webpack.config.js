@@ -7,7 +7,9 @@ const NODE_ENV = process.env.NODE_ENV;
 let resolve = {alias: {}};
 
 const plugins = [
-    new TransferWebpackPlugin([{from: 'app/root'}]),
+    new TransferWebpackPlugin([
+        { from: 'app/root' }
+    ]),
     new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
         filename: 'vendor.js',
@@ -31,19 +33,39 @@ const rules = [
     {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: [{
+    }
+];      
+
+const rules = [
+    {
+        test: /\.js$/,
+        enforce: 'pre',
+        exclude: /(node_modules)/,
+        use: {
+            loader: 'eslint-loader',
+            options: {
+                failOnWarning: true,
+                failOnError: true
+            }
+        }
+    },
+    {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {
             loader: 'babel-loader',
             options: {
                 presets: ['es2015']
             }
-        }]
+        }
     }
 ];
 
 if (NODE_ENV === 'production') {
+    // Do some cool stuff like uglify, minify...
     plugins.push(new webpack.DefinePlugin({
         'process.env': {
-            NODE_ENV: JSON.stringify(NODE_ENV) // Some library like React use this value in order to exclude test helpers
+            NODE_ENV: JSON.stringify(NODE_ENV)
         }
     }));
 
@@ -51,8 +73,16 @@ if (NODE_ENV === 'production') {
         lodash: 'lodash/lodash.min.js'
     });
 
+    resolve = {
+        alias: {
+            lodash: 'lodash/lodash.min.js',
+            react: 'react/dist/react.min.js',
+            'react-dom': 'react-dom/dist/react-dom.min.js'
+        }
+    };
+
     rules.unshift({
-        test: /\.jsx?$/,
+        test: /\.js$/,
         exclude: /node_modules/,
         use: ['uglify-loader']
     });
@@ -61,7 +91,7 @@ if (NODE_ENV === 'production') {
 module.exports = {
     entry: {
         app: ['./app/js/main.js'],
-        vendor: ['lodash']
+        vendor: ['lodash','react','react-dom']
     },
     resolve: resolve,
     output: {
@@ -69,7 +99,7 @@ module.exports = {
         filename: 'bundle.js'
     },
     module: {
-        rules
+        rules: rules
     },
     plugins: plugins
 };

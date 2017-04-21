@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --history-api-fallback --content-base app/root",
     "build": "node node_modules/webpack/bin/webpack.js",
-    "build:prod": "set NODE_ENV=production&& node node_modules/webpack/bin/webpack.js && zip -r dist.zip dist/",
+    "build:prod": "export NODE_ENV=production&& node node_modules/webpack/bin/webpack.js && zip -r dist.zip dist/",
     "test:NotFound": "node node_modules/mocha/bin/mocha test/setup.js test/tests/pokemon-not-found-test.js",
     "test:pokeapi": "node node_modules/mocha/bin/mocha test/setup.js test/tests/pokeapi-test.js",
     "test:type": "node node_modules/mocha/bin/mocha test/setup.js test/tests/type-table-test.js",

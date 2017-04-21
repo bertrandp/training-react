@@ -7,7 +7,9 @@ const NODE_ENV = process.env.NODE_ENV;
 let resolve = {alias: {}, extensions: ['.js', '.jsx']};
 
 const plugins = [
-    new TransferWebpackPlugin([{from: 'app/root'}]),
+    new TransferWebpackPlugin([
+        { from: 'app/root' }
+    ]),
     new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
         filename: 'vendor.js',
@@ -37,13 +39,38 @@ const rules = [
                 presets: ['es2015']
             }
         }]
+];      
+
+const rules = [
+    {
+        test: /\.jsx?$/,
+        enforce: 'pre',
+        exclude: /(node_modules)/,
+        use: {
+            loader: 'eslint-loader',
+            options: {
+                failOnWarning: true,
+                failOnError: true
+            }
+        }
+    },
+    {
+        test: /\.jsx?$/,
+        exclude: /(node_modules)/,
+        use: {
+            loader: 'babel-loader',
+            options: {
+                presets: ['es2015','react']
+            }
+        }
     }
 ];
 
 if (NODE_ENV === 'production') {
+    // Do some cool stuff like uglify, minify...
     plugins.push(new webpack.DefinePlugin({
         'process.env': {
-            NODE_ENV: JSON.stringify(NODE_ENV) // Some library like React use this value in order to exclude test helpers
+            NODE_ENV: JSON.stringify(NODE_ENV)
         }
     }));
 
@@ -52,7 +79,7 @@ if (NODE_ENV === 'production') {
     });
 
     rules.unshift({
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: ['uglify-loader']
     });
@@ -61,7 +88,7 @@ if (NODE_ENV === 'production') {
 module.exports = {
     entry: {
         app: ['./app/js/main.js'],
-        vendor: ['lodash']
+        vendor: ['lodash','react','react-dom']
     },
     resolve: resolve,
     output: {
@@ -69,7 +96,7 @@ module.exports = {
         filename: 'bundle.js'
     },
     module: {
-        rules
+        rules: rules
     },
     plugins: plugins
 };

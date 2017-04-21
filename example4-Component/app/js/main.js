@@ -1,6 +1,6 @@
 import ReactDom from 'react-dom';
-import React, {Component} from 'react';
-import _ from 'lodash';
+import React from 'react';
+import Table from './table.js';
 
 const helloWorlds = [
     {region: 'asia', country: 'Japan', hello: 'こんにちは'},
@@ -15,11 +15,4 @@ const helloWorlds = [
     {region: 'america', country: 'Mexico', hello: 'Hola'},
 ];
 
-
-let rows = _.map(helloWorlds, helloworld => {
-    return React.createElement('p', {key: helloworld.hello}, helloworld.hello);
-});
-
-var root = React.createElement('div', null, rows);
-
-ReactDom.render(root, document.getElementById('app'));
+ReactDom.render(<Table list={helloWorlds} />, document.getElementById('app'));

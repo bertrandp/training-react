@@ -10,52 +10,57 @@ let resolve = {
 };
 
 const plugins = [
-    new TransferWebpackPlugin([{from: 'app/root'}]),
+    new TransferWebpackPlugin([
+        { from: 'app/root' }
+    ]),
     new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
         filename: 'vendor.js',
         minChunks: Infinity
     })
-];
+];      
 
 const rules = [
     {
         test: /\.jsx?$/,
-        enforce: "pre",
-        exclude: /node_modules/,
-        use: [{
-            loader :'eslint-loader',
+        enforce: 'pre',
+        exclude: /(node_modules)/,
+        use: {
+            loader: 'eslint-loader',
             options: {
-                failOnWarning: false,
+                failOnWarning: true,
                 failOnError: true
             }
-        }]
+        }
     },
     {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
-        use: [{
+        exclude: /(node_modules)/,
+        use: {
             loader: 'babel-loader',
             options: {
-                presets: ['es2015', 'react']
+                presets: ['es2015','react']
             }
-        }]
+        }
     }
 ];
 
 if (NODE_ENV === 'production') {
+    // Do some cool stuff like uglify, minify...
     plugins.push(new webpack.DefinePlugin({
         'process.env': {
-            NODE_ENV: JSON.stringify(NODE_ENV) // Some library like React use this value in order to exclude test helpers
+            NODE_ENV: JSON.stringify(NODE_ENV)
         }
     }));
 
-    Object.assign(resolve.alias, {
-        react: 'react/dist/react.min.js',
-        'react-dom': 'react-dom/dist/react-dom.min.js'
-    });
+    resolve = {
+        alias: {
+            lodash: 'lodash/lodash.min.js',
+            react: 'react/dist/react.min.js',
+            'react-dom': 'react-dom/dist/react-dom.min.js'
+        }
+    };
 
-    // We must add this loader before babel loader because this loader is only for our source.
     rules.unshift({
         test: /\.jsx?$/,
         exclude: /node_modules/,
@@ -63,10 +68,10 @@ if (NODE_ENV === 'production') {
     });
 }
 
-const config = {
+module.exports = {
     entry: {
-        app: ['./app/js/main.jsx'],
-        vendor: ['react', 'react-dom']
+        app: ['./app/js/main.js'],
+        vendor: ['lodash','react','react-dom']
     },
     resolve: resolve,
     output: {
@@ -74,13 +79,7 @@ const config = {
         filename: 'bundle.js'
     },
     module: {
-        rules
+        rules: rules
     },
     plugins: plugins
 };
-
-if (NODE_ENV !== 'production') {
-    config.devtool = "source-map";
-}
-
-module.exports = config;
