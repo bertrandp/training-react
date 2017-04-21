@@ -9,6 +9,7 @@
   "author": "jbpetit@excilys.com",
   "license": "MIT",
   "devDependencies": {
+    "json-loader": "^0.5.4",
     "transfer-webpack-plugin": "^0.1.4",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"

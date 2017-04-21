@@ -1,34 +1,54 @@
-var TransferWebpackPlugin = require('transfer-webpack-plugin');
-var path = require('path');
-var webpack = require('webpack');
+const TransferWebpackPlugin = require('transfer-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
 
-var NODE_ENV = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV;
 
-var resolve = {alias: {}};
+let resolve = {
+    extensions: ['.js','.jsx'],
+    alias: {}};
 
-var plugins = [
-    new TransferWebpackPlugin([{from: 'app/root'}]),
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js', Infinity)
-];
+const plugins = [
+    new TransferWebpackPlugin([
+        { from: 'app/root' }
+    ]),
+    new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        filename: 'vendor.js',
+        minChunks: Infinity
+    })
+];      
 
-var rules = [
+const rules = [
     {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         enforce: 'pre',
-        exclude: /node_modules/,
-        use: ['eslint-loader'],
-        options : {
-            failOnWarning: false,
-            failOnError: true
+        exclude: /(node_modules)/,
+        use: {
+            loader: 'eslint-loader',
+            options: {
+                failOnWarning: true,
+                failOnError: true
+            }
         }
     },
-    {test: /\.js$/, exclude: /node_modules/, use: [{loader: 'babel-loader', options: {presets: ['es2015']}}]}
+    {
+        test: /\.jsx?$/,
+        exclude: /(node_modules)/,
+        use: {
+            loader: 'babel-loader',
+            options: {
+                presets: ['es2015','react']
+            }
+        }
+    }
 ];
 
 if (NODE_ENV === 'production') {
+    // Do some cool stuff like uglify, minify...
     plugins.push(new webpack.DefinePlugin({
         'process.env': {
-            NODE_ENV: JSON.stringify(NODE_ENV) // Some library like React use this value in order to exclude test helpers
+            NODE_ENV: JSON.stringify(NODE_ENV)
         }
     }));
 
@@ -40,13 +60,17 @@ if (NODE_ENV === 'production') {
         }
     };
 
-    rules.unshift({test: /\.js$/, exclude: /node_modules/, use: ['uglify-loader']}); // We must add this loader before babel loader because this loader is only for our source.
+    rules.unshift({
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: ['uglify-loader']
+    });
 }
 
 module.exports = {
     entry: {
         app: ['./app/js/main.js'],
-        vendor: ['lodash', 'react', 'react-dom']
+        vendor: ['lodash','react','react-dom']
     },
     resolve: resolve,
     output: {
@@ -54,7 +78,7 @@ module.exports = {
         filename: 'bundle.js'
     },
     module: {
-        rules
+        rules: rules
     },
     plugins: plugins
 };

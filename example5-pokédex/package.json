@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base app/root",
     "build": "node node_modules/webpack/bin/webpack.js",
-    "build:prod": "set NODE_ENV=production&& node node_modules/webpack/bin/webpack.js && zip -r dist.zip dist/"
+    "build:prod": "export NODE_ENV=production&& node node_modules/webpack/bin/webpack.js && zip -r dist.zip dist/"
   },
   "author": "jbpetit@excilys.com",
   "license": "MIT",

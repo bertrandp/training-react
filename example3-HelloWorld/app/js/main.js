@@ -1,4 +1,6 @@
 import _ from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 const helloWorlds = [
     {region: 'asia', country: 'Japan', hello: 'こんにちは'},
@@ -12,3 +14,11 @@ const helloWorlds = [
     {region: 'america', country: 'USA', hello: 'Hello'},
     {region: 'america', country: 'Mexico', hello: 'Hola'},
 ];
+
+const list = _.map(helloWorlds, value => {
+    return React.createElement('p', {key:value.country}, value.hello);
+});
+
+const root = React.createElement('div', {key:'yo'}, list);
+
+ReactDOM.render(root,document.getElementById('app'));
