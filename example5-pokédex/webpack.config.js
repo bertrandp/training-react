@@ -5,9 +5,8 @@ const webpack = require('webpack');
 const NODE_ENV = process.env.NODE_ENV;
 
 let resolve = {
-    alias: {},
-    extensions: ['.js', '.jsx']
-};
+    extensions: ['.js','.jsx'],
+    alias: {}};
 
 const plugins = [
     new TransferWebpackPlugin([

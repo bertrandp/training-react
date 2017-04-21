@@ -4,7 +4,9 @@ const webpack = require('webpack');
 
 const NODE_ENV = process.env.NODE_ENV;
 
-let resolve = {alias: {}, extensions: ['.js', '.jsx']};
+let resolve = {
+    extensions: ['.js','.jsx'],
+    alias: {}};
 
 const plugins = [
     new TransferWebpackPlugin([
@@ -15,30 +17,6 @@ const plugins = [
         filename: 'vendor.js',
         minChunks: Infinity
     })
-];
-
-const rules = [
-    {
-        test: /\.js$/,
-        enforce: "pre",
-        exclude: /node_modules/,
-        use: [{
-            loader :'eslint-loader',
-            options: {
-                failOnWarning: false,
-                failOnError: true
-            }
-        }]
-    },
-    {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: [{
-            loader: 'babel-loader',
-            options: {
-                presets: ['es2015']
-            }
-        }]
 ];      
 
 const rules = [

@@ -15,25 +15,6 @@ const plugins = [
         filename: 'vendor.js',
         minChunks: Infinity
     })
-];
-
-const rules = [
-    {
-        test: /\.jsx?$/,
-        enforce: "pre",
-        exclude: /node_modules/,
-        use: [{
-            loader :'eslint-loader',
-            options: {
-                failOnWarning: false,
-                failOnError: true
-            }
-        }]
-    },
-    {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-    }
 ];      
 
 const rules = [
